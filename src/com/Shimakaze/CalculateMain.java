@@ -9,12 +9,14 @@ import java.util.Random;
 
 public class CalculateMain {
 
-    public static void calculateMain(int expressionNum, int rangeNumber) {
-        //计算部分
-        BinaryTree bTree;
-        String[] exercises_s = new String[expressionNum];
-        String[] answers_s = new String[expressionNum];
+    public static void calculateMain(int expressionNum, int rangeNumber) throws IOException {
 
+        BinaryTree bTree;
+        //定义长度可变的字符串
+        StringBuffer exercises_s = new StringBuffer("");
+        StringBuffer answers_s = new StringBuffer("");
+
+        //计算部分
         for (int i = 0; i < expressionNum; i++) {
             //随机获取运算符个数
             int numOperator;
@@ -24,28 +26,21 @@ public class CalculateMain {
             //生成二叉树
             bTree = new BinaryTree(numOperator);
             bTree.createBTree(rangeNumber);
+            //将题目字符串赋值于exp，答案字符串赋值于ans
             String ans = fractionChange.improper2mixed(bTree.CalAndVal());
             //运算符左右插入空格
             String exp = bTree.Expression().replaceAll("\\+", " \\+ ").replaceAll("\\-", " \\- ").replaceAll("\\×", " \\× ").replaceAll("\\÷", " \\÷ ");
-
-            //生成的题目存入执行程序的当前目录下的Exercises.txt文件
-            exercises_s[i] = exp + " = ";
-            WriteUtils wu1 = new WriteUtils();
-            try {
-                wu1.writeExercises(exercises_s, "Exercises.txt", expressionNum);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            //生成的答案存入执行程序的当前目录下的Answers.txt文件
-            answers_s[i] = exp + " = " + ans;
-            WriteUtils wu2 = new WriteUtils();
-            try {
-                wu2.writeAnswers(answers_s, "Answers.txt", expressionNum);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            //将练习题每题按换行写入可变字符串exercises_s
+            exercises_s.append(i + 1 + "、" + exp + " = " + "\n");
+            //将练习题答案按换行写入可变字符串answers_s
+            answers_s.append(i + 1 + "、" + exp + " = " + ans + "\n");
         }
+
+        //将字符串写入练习题文件与答案文件
+        WriteUtils wu = new WriteUtils();
+        wu.writeUtils(exercises_s, "Exercises.txt");
+        wu.writeUtils(answers_s, "Answers.txt");
+
     }
 
 }
